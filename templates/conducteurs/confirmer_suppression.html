@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Supprimer conducteur{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-md-5"><div class="stat-card text-center">
+<i class="bi bi-exclamation-triangle-fill text-danger" style="font-size:3rem;"></i>
+<h5 class="mt-3">Supprimer {{ conducteur }} ?</h5>
+<form method="post">{% csrf_token %}
+  <button type="submit" class="btn btn-danger me-2">Supprimer</button>
+  <a href="{% url 'liste_conducteurs' %}" class="btn btn-outline-secondary">Annuler</a>
+</form>
+</div></div></div>
+{% endblock %}

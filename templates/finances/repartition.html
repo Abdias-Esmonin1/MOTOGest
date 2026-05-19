@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load moto_tags %}
+{% block title %}Répartition revenus{% endblock %}
+{% block page_title %}<i class="bi bi-pie-chart me-2"></i>Répartition intelligente des revenus{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-md-8">
+<div class="stat-card mb-4">
+  <h6 class="fw-semibold mb-1">Recettes du mois</h6>
+  <div class="display-6 fw-bold text-success mb-4">{{ stats.recettes|fcfa }}</div>
+  <canvas id="chartRep" height="160"></canvas>
+</div>
+<div class="row g-3">
+  <div class="col-6">
+    <div class="stat-card text-center" style="border-left:4px solid #1a472a;">
+      <div class="fw-bold text-success fs-4">{{ stats.repartition.epargne|fcfa }}</div>
+      <div class="text-muted">35% — Épargne business</div>
+      <small class="text-muted">Réserve pour développer l'activité</small>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="stat-card text-center" style="border-left:4px solid #1565c0;">
+      <div class="fw-bold text-primary fs-4">{{ stats.repartition.maintenance|fcfa }}</div>
+      <div class="text-muted">25% — Maintenance</div>
+      <small class="text-muted">Entretien et réparations motos</small>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="stat-card text-center" style="border-left:4px solid #f0a500;">
+      <div class="fw-bold text-warning fs-4">{{ stats.repartition.reinvestissement|fcfa }}</div>
+      <div class="text-muted">20% — Réinvestissement</div>
+      <small class="text-muted">Achat équipements, nouvelle moto</small>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="stat-card text-center" style="border-left:4px solid #dc3545;">
+      <div class="fw-bold text-danger fs-4">{{ stats.repartition.personnel|fcfa }}</div>
+      <div class="text-muted">20% — Personnel</div>
+      <small class="text-muted">Dépenses personnelles du propriétaire</small>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+new Chart(document.getElementById('chartRep'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Épargne (35%)', 'Maintenance (25%)', 'Réinvestissement (20%)', 'Personnel (20%)'],
+    datasets: [{
+      data: [35, 25, 20, 20],
+      backgroundColor: ['#1a472a','#1565c0','#f0a500','#dc3545'],
+      borderWidth: 0
+    }]
+  },
+  options: { responsive: true, plugins: { legend: { position: 'bottom' } }, cutout: '60%' }
+});
+</script>
+{% endblock %}

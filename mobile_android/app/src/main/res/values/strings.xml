@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MotoGest</string>
+    <string name="server_url">http://172.20.10.9:8000/</string>
+</resources>

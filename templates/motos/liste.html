@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load moto_tags %}
+{% block title %}Motos{% endblock %}
+{% block page_title %}<i class="bi bi-motorcycle me-2"></i>Gestion des motos{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <span class="badge bg-success me-2">{{ motos|length }} moto(s)</span>
+  </div>
+  <a href="{% url 'ajouter_moto' %}" class="btn btn-primary"><i class="bi bi-plus-circle me-1"></i>Ajouter une moto</a>
+</div>
+<div class="row g-3">
+{% for moto in motos %}
+<div class="col-md-4">
+  <div class="stat-card">
+    <div class="d-flex align-items-start justify-content-between mb-3">
+      <div>
+        <h6 class="fw-bold mb-1">{{ moto.nom }}</h6>
+        <span class="text-muted small">{{ moto.immatriculation }}</span>
+      </div>
+      <span class="badge {% if moto.etat == 'active' %}badge-active{% elif moto.etat == 'panne' %}badge-panne{% elif moto.etat == 'maintenance' %}badge-maintenance{% else %}badge-repos{% endif %}">
+        {{ moto.get_etat_display }}
+      </span>
+    </div>
+    <div class="d-flex justify-content-between text-muted small mb-3">
+      <span><i class="bi bi-tag me-1"></i>{{ moto.get_type_moto_display }}</span>
+      <span class="fw-semibold text-success">{{ moto.montant_journalier|fcfa }}/j</span>
+    </div>
+    {% if moto.conducteur_actuel %}
+    <div class="text-muted small mb-3"><i class="bi bi-person me-1"></i>{{ moto.conducteur_actuel }}</div>
+    {% endif %}
+    <div class="d-flex gap-2 mt-2">
+      <a href="{% url 'detail_moto' moto.pk %}" class="btn btn-sm btn-outline-primary flex-fill">Détail</a>
+      <a href="{% url 'modifier_moto' moto.pk %}" class="btn btn-sm btn-outline-secondary">Modifier</a>
+      <a href="{% url 'supprimer_moto' moto.pk %}" class="btn btn-sm btn-outline-danger">Suppr.</a>
+    </div>
+  </div>
+</div>
+{% empty %}
+<div class="col-12"><div class="stat-card text-center text-muted py-5">Aucune moto enregistrée. <a href="{% url 'ajouter_moto' %}">Ajouter la première moto</a></div></div>
+{% endfor %}
+</div>
+{% endblock %}

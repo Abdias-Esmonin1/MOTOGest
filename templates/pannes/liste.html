@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load moto_tags %}
+{% block title %}Pannes{% endblock %}
+{% block page_title %}<i class="bi bi-tools me-2"></i>Gestion des pannes{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex gap-2">
+    <span class="badge bg-danger">{{ pannes|length }} panne(s)</span>
+    <span class="text-muted small fw-semibold">Coût total : <span class="text-danger">{{ total_cout|fcfa }}</span></span>
+  </div>
+  <a href="{% url 'ajouter_panne' %}" class="btn btn-danger"><i class="bi bi-plus-circle me-1"></i>Déclarer une panne</a>
+</div>
+<div class="table-card">
+  <div class="table-responsive">
+  <table class="table table-hover align-middle mb-0">
+    <thead><tr><th>Date</th><th>Moto</th><th>Type de panne</th><th>Coût (FCFA)</th><th>Garagiste</th><th>Durée immo.</th><th>Statut</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for p in pannes %}
+    <tr>
+      <td class="text-muted small">{{ p.date_panne }}</td>
+      <td class="fw-semibold">{{ p.moto.nom }}</td>
+      <td>{{ p.type_panne }}</td>
+      <td class="text-danger fw-semibold">{{ p.cout_reparation|fcfa }}</td>
+      <td class="text-muted">{{ p.garagiste|default:"—" }}</td>
+      <td class="text-muted small">{{ p.duree_immobilisation }} jour(s)</td>
+      <td>
+        {% if p.statut == 'en_cours' %}<span class="badge badge-panne">En cours</span>
+        {% elif p.statut == 'reparee' %}<span class="badge badge-active">Réparée</span>
+        {% else %}<span class="badge bg-secondary">Abandonnée</span>{% endif %}
+      </td>
+      <td>
+        <a href="{% url 'detail_panne' p.pk %}" class="btn btn-sm btn-outline-secondary">Détail</a>
+        <a href="{% url 'modifier_panne' p.pk %}" class="btn btn-sm btn-outline-primary ms-1">Modifier</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="8" class="text-center text-muted py-4"><i class="bi bi-check-circle text-success me-2"></i>Aucune panne enregistrée</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}

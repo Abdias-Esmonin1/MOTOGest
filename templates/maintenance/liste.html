@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load moto_tags %}
+{% block title %}Maintenance{% endblock %}
+{% block page_title %}<i class="bi bi-wrench-adjustable me-2"></i>Maintenance préventive{% endblock %}
+{% block content %}
+{% if urgentes %}
+<div class="alert-panne p-3 mb-4">
+  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+  <strong>{{ urgentes.count }} maintenance(s) urgente(s) ou en retard !</strong>
+</div>
+{% endif %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <span class="badge bg-warning text-dark">{{ maintenances|length }} maintenance(s) planifiée(s)</span>
+  <a href="{% url 'ajouter_maintenance' %}" class="btn btn-warning"><i class="bi bi-plus-circle me-1"></i>Planifier</a>
+</div>
+<div class="table-card">
+  <div class="table-responsive">
+  <table class="table table-hover align-middle mb-0">
+    <thead><tr><th>Moto</th><th>Type</th><th>Date prévue</th><th>Coût (FCFA)</th><th>Statut</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for m in maintenances %}
+    <tr>
+      <td class="fw-semibold">{{ m.moto.nom }}</td>
+      <td><i class="bi bi-wrench me-1"></i>{{ m.get_type_maintenance_display }}</td>
+      <td class="{% if m.statut == 'en_retard' %}text-danger fw-bold{% elif m.statut == 'urgent' %}text-warning fw-bold{% else %}text-muted{% endif %}">{{ m.date_prevue }}</td>
+      <td>{{ m.cout|fcfa }}</td>
+      <td>
+        {% if m.statut == 'planifie' %}<span class="badge bg-info text-dark">Planifié</span>
+        {% elif m.statut == 'fait' %}<span class="badge badge-active">Fait</span>
+        {% elif m.statut == 'urgent' %}<span class="badge bg-warning text-dark">Urgent</span>
+        {% else %}<span class="badge badge-panne">En retard</span>{% endif %}
+      </td>
+      <td><a href="{% url 'modifier_maintenance' m.pk %}" class="btn btn-sm btn-outline-primary">Modifier</a></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6" class="text-center text-muted py-4">Aucune maintenance planifiée</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}

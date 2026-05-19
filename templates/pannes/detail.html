@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load moto_tags %}
+{% block title %}Panne — {{ panne.moto.nom }}{% endblock %}
+{% block page_title %}<i class="bi bi-tools me-2"></i>Détail panne — {{ panne.moto.nom }}{% endblock %}
+{% block content %}
+<div class="row g-3">
+<div class="col-md-5">
+<div class="stat-card">
+  <h6 class="fw-bold mb-3">Informations</h6>
+  <table class="table table-sm">
+    <tr><td class="text-muted">Moto</td><td class="fw-semibold">{{ panne.moto }}</td></tr>
+    <tr><td class="text-muted">Type</td><td>{{ panne.type_panne }}</td></tr>
+    <tr><td class="text-muted">Date panne</td><td>{{ panne.date_panne }}</td></tr>
+    <tr><td class="text-muted">Date réparation</td><td>{{ panne.date_reparation|default:"En cours" }}</td></tr>
+    <tr><td class="text-muted">Immobilisation</td><td>{{ panne.duree_immobilisation }} jour(s)</td></tr>
+    <tr><td class="text-muted">Coût</td><td class="text-danger fw-bold">{{ panne.cout_reparation|fcfa }}</td></tr>
+    <tr><td class="text-muted">Garagiste</td><td>{{ panne.garagiste|default:"—" }}</td></tr>
+    <tr><td class="text-muted">Statut</td><td>
+      {% if panne.statut == 'en_cours' %}<span class="badge badge-panne">En cours</span>
+      {% elif panne.statut == 'reparee' %}<span class="badge badge-active">Réparée</span>
+      {% else %}<span class="badge bg-secondary">Abandonnée</span>{% endif %}
+    </td></tr>
+  </table>
+  {% if panne.description %}<p class="text-muted small"><strong>Description :</strong> {{ panne.description }}</p>{% endif %}
+  {% if panne.observations %}<p class="text-muted small"><strong>Observations :</strong> {{ panne.observations }}</p>{% endif %}
+  {% if panne.facture %}<a href="{{ panne.facture.url }}" target="_blank" class="btn btn-sm btn-outline-secondary w-100 mb-2"><i class="bi bi-file-image me-1"></i>Voir facture</a>{% endif %}
+  <a href="{% url 'modifier_panne' panne.pk %}" class="btn btn-outline-primary btn-sm w-100">Modifier</a>
+</div>
+</div>
+</div>
+{% endblock %}

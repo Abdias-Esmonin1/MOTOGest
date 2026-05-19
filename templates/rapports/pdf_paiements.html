@@ -1,0 +1,326 @@
+{% load moto_tags %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Rapport des paiements</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 1.4cm 1.2cm 1.5cm 1.2cm;
+    }
+
+    body {
+      color: #1a1a2e;
+      font-family: DejaVu Sans, Arial, sans-serif;
+      font-size: 10px;
+      line-height: 1.35;
+    }
+
+    .header-table,
+    .summary-table,
+    .meta-table,
+    .payments-table,
+    .footer-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .header {
+      border-bottom: 3px solid #1a472a;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .brand {
+      color: #1a472a;
+      font-size: 24px;
+      font-weight: bold;
+      letter-spacing: .2px;
+    }
+
+    .brand-subtitle {
+      color: #6c757d;
+      font-size: 10px;
+      margin-top: 2px;
+    }
+
+    .report-title {
+      color: #1a1a2e;
+      font-size: 17px;
+      font-weight: bold;
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    .report-date {
+      color: #6c757d;
+      font-size: 9px;
+      text-align: right;
+    }
+
+    .section-title {
+      background: #1a472a;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 7px 9px;
+      margin: 14px 0 8px;
+      text-transform: uppercase;
+    }
+
+    .meta-table td {
+      border: 1px solid #dfe7df;
+      padding: 7px 8px;
+      vertical-align: top;
+    }
+
+    .meta-label {
+      color: #6c757d;
+      display: block;
+      font-size: 8px;
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      color: #1a1a2e;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .summary-table td {
+      border: 1px solid #dfe7df;
+      padding: 9px 10px;
+      width: 33.33%;
+    }
+
+    .summary-label {
+      color: #6c757d;
+      display: block;
+      font-size: 8px;
+      text-transform: uppercase;
+    }
+
+    .summary-value {
+      color: #1a472a;
+      display: block;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 4px;
+    }
+
+    .summary-value.danger {
+      color: #b42318;
+    }
+
+    .payments-table {
+      margin-top: 8px;
+      table-layout: fixed;
+    }
+
+    .payments-table th {
+      background: #f0f5f0;
+      border: 1px solid #d9e3d9;
+      color: #243b2e;
+      font-size: 8px;
+      font-weight: bold;
+      padding: 6px 5px;
+      text-align: left;
+      text-transform: uppercase;
+    }
+
+    .payments-table td {
+      border: 1px solid #e3e9e3;
+      padding: 6px 5px;
+      vertical-align: top;
+      word-wrap: break-word;
+    }
+
+    .payments-table tr:nth-child(even) td {
+      background: #fbfcfb;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .muted {
+      color: #6c757d;
+    }
+
+    .money-ok {
+      color: #1a472a;
+      font-weight: bold;
+    }
+
+    .money-danger {
+      color: #b42318;
+      font-weight: bold;
+    }
+
+    .badge {
+      border-radius: 10px;
+      display: inline-block;
+      font-size: 8px;
+      font-weight: bold;
+      padding: 3px 7px;
+      text-align: center;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .badge-paid {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .badge-partial {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .badge-absent {
+      background: #e9ecef;
+      color: #495057;
+    }
+
+    .badge-breakdown {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .empty-row {
+      color: #6c757d;
+      font-size: 11px;
+      padding: 22px 10px;
+      text-align: center;
+    }
+
+    .footer {
+      border-top: 1px solid #dfe7df;
+      color: #6c757d;
+      font-size: 8px;
+      margin-top: 18px;
+      padding-top: 8px;
+    }
+
+    .footer-table td:last-child {
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <table class="header-table">
+      <tr>
+        <td>
+          <div class="brand">MotoGest</div>
+          <div class="brand-subtitle">Gestion de flotte moto et suivi des recettes</div>
+        </td>
+        <td>
+          <div class="report-title">Rapport des paiements</div>
+          <div class="report-date">Généré le {% now "d/m/Y H:i" %}</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section-title">Période du rapport</div>
+  <table class="meta-table">
+    <tr>
+      <td>
+        <span class="meta-label">Date de début</span>
+        <span class="meta-value">{% if date_debut %}{{ date_debut }}{% else %}Toutes les dates{% endif %}</span>
+      </td>
+      <td>
+        <span class="meta-label">Date de fin</span>
+        <span class="meta-value">{% if date_fin %}{{ date_fin }}{% else %}Toutes les dates{% endif %}</span>
+      </td>
+      <td>
+        <span class="meta-label">Nombre d'enregistrements</span>
+        <span class="meta-value">{{ paiements|length }}</span>
+      </td>
+    </tr>
+  </table>
+
+  <div class="section-title">Synthèse</div>
+  <table class="summary-table">
+    <tr>
+      <td>
+        <span class="summary-label">Total attendu</span>
+        <span class="summary-value">{{ total_attendu|fcfa }}</span>
+      </td>
+      <td>
+        <span class="summary-label">Total versé</span>
+        <span class="summary-value">{{ total|fcfa }}</span>
+      </td>
+      <td>
+        <span class="summary-label">Manque à gagner</span>
+        <span class="summary-value danger">{{ total_manque|fcfa }}</span>
+      </td>
+    </tr>
+  </table>
+
+  <div class="section-title">Détails des paiements</div>
+  <table class="payments-table">
+    <thead>
+      <tr>
+        <th style="width: 12%;">Date</th>
+        <th style="width: 19%;">Moto</th>
+        <th style="width: 14%;" class="text-right">Attendu</th>
+        <th style="width: 14%;" class="text-right">Versé</th>
+        <th style="width: 13%;" class="text-right">Manque</th>
+        <th style="width: 11%;" class="text-center">Taux</th>
+        <th style="width: 11%;" class="text-center">Statut</th>
+        <th style="width: 16%;">Observations</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in paiements %}
+      <tr>
+        <td>{{ p.date|date:"d/m/Y" }}</td>
+        <td>
+          <strong>{{ p.moto.nom }}</strong><br>
+          <span class="muted">{{ p.moto.immatriculation }}</span>
+        </td>
+        <td class="text-right muted">{{ p.montant_attendu|fcfa }}</td>
+        <td class="text-right money-ok">{{ p.montant_verse|fcfa }}</td>
+        <td class="text-right {% if p.manque_a_gagner > 0 %}money-danger{% else %}muted{% endif %}">
+          {{ p.manque_a_gagner|fcfa }}
+        </td>
+        <td class="text-center">{{ p.taux_recouvrement }}%</td>
+        <td class="text-center">
+          {% if p.statut == 'paye' %}
+            <span class="badge badge-paid">Payé</span>
+          {% elif p.statut == 'partiel' %}
+            <span class="badge badge-partial">Partiel</span>
+          {% elif p.statut == 'absent' %}
+            <span class="badge badge-absent">Absent</span>
+          {% else %}
+            <span class="badge badge-breakdown">Panne</span>
+          {% endif %}
+        </td>
+        <td>{% if p.observations %}{{ p.observations }}{% else %}<span class="muted">-</span>{% endif %}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="8" class="empty-row">Aucun paiement trouvé pour cette période.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <table class="footer-table">
+      <tr>
+        <td>MotoGest - Rapport automatique des paiements journaliers</td>
+        <td>Total encaissé : <strong>{{ total|fcfa }}</strong></td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>

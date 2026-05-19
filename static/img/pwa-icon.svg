@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-label="MotoGest">
+  <rect width="192" height="192" rx="40" fill="#1a472a"/>
+  <circle cx="55" cy="124" r="23" fill="none" stroke="#f0a500" stroke-width="12"/>
+  <circle cx="137" cy="124" r="23" fill="none" stroke="#f0a500" stroke-width="12"/>
+  <path d="M58 124h27l18-38h20l14 38M84 124h37M78 88h24" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M108 86h31" fill="none" stroke="#f0a500" stroke-width="10" stroke-linecap="round"/>
+</svg>

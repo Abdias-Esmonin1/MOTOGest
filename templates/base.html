@@ -1,0 +1,236 @@
+{% load static %}
+{% load moto_tags %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a472a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="MotoGest">
+<title>{% block title %}MotoGest{% endblock %} — Gestion de Flotte</title>
+<link rel="manifest" href="{% url 'manifest' %}">
+<link rel="apple-touch-icon" href="{% static 'img/pwa-icon-192.png' %}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="{% static 'css/main.css' %}" rel="stylesheet">
+<style>
+:root {
+  --sidebar-width: 260px;
+  --primary: #1a472a;
+  --primary-light: #2d6a4f;
+  --accent: #f0a500;
+  --bg-dark: #0f2d1c;
+}
+body { background: #f4f6f4; font-family: 'Segoe UI', sans-serif; }
+/* SIDEBAR */
+.sidebar {
+  position: fixed; top: 0; left: 0; height: 100vh;
+  width: var(--sidebar-width); background: var(--bg-dark);
+  z-index: 1000; overflow-y: auto; transition: transform .3s;
+}
+.sidebar-brand {
+  padding: 1.5rem 1.2rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.sidebar-brand h5 { color: var(--accent); font-weight: 700; margin: 0; font-size: 1.1rem; }
+.sidebar-brand small { color: rgba(255,255,255,.5); font-size: .75rem; }
+.sidebar .nav-section {
+  padding: .75rem 1rem .2rem;
+  color: rgba(255,255,255,.35);
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+.sidebar .nav-link {
+  color: rgba(255,255,255,.7); padding: .55rem 1.2rem;
+  border-radius: 8px; margin: 1px .5rem;
+  display: flex; align-items: center; gap: .65rem;
+  font-size: .88rem; transition: all .2s;
+}
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+  background: rgba(255,255,255,.1); color: #fff;
+}
+.sidebar .nav-link.active { background: var(--primary); color: #fff; }
+.sidebar .nav-link i { font-size: 1.05rem; width: 20px; }
+.badge-sidebar {
+  margin-left: auto; font-size: .65rem;
+  background: #dc3545; color: #fff;
+  padding: 2px 6px; border-radius: 10px;
+}
+/* TOPBAR */
+.topbar {
+  position: fixed; top: 0; left: var(--sidebar-width); right: 0;
+  height: 60px; background: #fff; z-index: 999;
+  border-bottom: 1px solid #e8ece8;
+  display: flex; align-items: center; padding: 0 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+.topbar .page-title { font-weight: 600; color: #1a1a2e; font-size: 1rem; }
+/* CONTENT */
+.main-content {
+  margin-left: var(--sidebar-width);
+  margin-top: 60px;
+  padding: 1.5rem;
+  min-height: calc(100vh - 60px);
+}
+/* CARDS */
+.stat-card {
+  background: #fff; border-radius: 12px;
+  padding: 1.2rem 1.4rem; border: 1px solid #e8ece8;
+  transition: box-shadow .2s;
+}
+.stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+.stat-card .stat-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+}
+.stat-card .stat-value { font-size: 1.6rem; font-weight: 700; color: #1a1a2e; }
+.stat-card .stat-label { font-size: .78rem; color: #6c757d; margin-top: .1rem; }
+/* STATUS BADGES */
+.badge-active { background: #d4edda; color: #155724; }
+.badge-panne  { background: #f8d7da; color: #721c24; }
+.badge-maintenance { background: #fff3cd; color: #856404; }
+.badge-repos  { background: #d1ecf1; color: #0c5460; }
+/* TABLE */
+.table-card { background: #fff; border-radius: 12px; border: 1px solid #e8ece8; overflow: hidden; }
+.table-card .table { margin: 0; }
+.table-card .table thead th { background: #f8faf8; color: #495057; font-weight: 600; font-size: .82rem; border-bottom: 1px solid #e8ece8; }
+/* ALERTS */
+.alert-panne { background: #fff5f5; border: 1px solid #fecaca; color: #7f1d1d; border-radius: 10px; }
+/* MOBILE */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main-content, .topbar { margin-left: 0; left: 0; }
+  .topbar { padding: 0 .85rem; }
+  .topbar .page-title { max-width: 46vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar .ms-auto { gap: .5rem !important; }
+  .topbar .badge, .topbar .text-muted { display: none; }
+  .main-content { padding: 1rem .85rem 5.5rem; }
+  .table-card { overflow-x: auto; }
+  .table { min-width: 640px; }
+  .stat-card { border-radius: 8px; padding: 1rem; }
+  .sidebar-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,.35);
+    z-index: 998; display: none;
+  }
+  .sidebar-backdrop.show { display: block; }
+}
+.btn-primary { background: var(--primary); border-color: var(--primary); }
+.btn-primary:hover { background: var(--primary-light); border-color: var(--primary-light); }
+.btn-outline-primary { color: var(--primary); border-color: var(--primary); }
+.btn-outline-primary:hover { background: var(--primary); border-color: var(--primary); }
+</style>
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar(false)"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <h5><i class="bi bi-motorcycle me-2"></i>MotoGest</h5>
+    <small>Gestion de Flotte Moto</small>
+  </div>
+
+  <div class="nav-section">Principal</div>
+  <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+    <i class="bi bi-speedometer2"></i> Tableau de bord
+  </a>
+  <a href="{% url 'saisie_journaliere' %}" class="nav-link {% if 'paiement' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-cash-coin"></i> Saisie du jour
+  </a>
+
+  <div class="nav-section">Flotte</div>
+  <a href="{% url 'liste_motos' %}" class="nav-link {% if 'moto' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-motorcycle"></i> Motos
+    {% if motos_panne > 0 %}<span class="badge-sidebar">{{ motos_panne }}</span>{% endif %}
+  </a>
+  <a href="{% url 'liste_conducteurs' %}" class="nav-link {% if 'conducteur' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-person-badge"></i> Conducteurs
+  </a>
+
+  <div class="nav-section">Opérations</div>
+  <a href="{% url 'liste_pannes' %}" class="nav-link {% if 'panne' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-tools"></i> Pannes
+    {% if pannes_actives > 0 %}<span class="badge-sidebar">{{ pannes_actives }}</span>{% endif %}
+  </a>
+  <a href="{% url 'liste_maintenances' %}" class="nav-link {% if 'maintenance' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-wrench-adjustable"></i> Maintenance
+    {% if maintenances_urgentes > 0 %}<span class="badge-sidebar">{{ maintenances_urgentes }}</span>{% endif %}
+  </a>
+
+  <div class="nav-section">Finances</div>
+  <a href="{% url 'tableau_bord_finances' %}" class="nav-link {% if 'finances' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-bar-chart-line"></i> Finances
+  </a>
+  <a href="{% url 'repartition_revenus' %}" class="nav-link">
+    <i class="bi bi-pie-chart"></i> Répartition revenus
+  </a>
+  <a href="{% url 'historique_paiements' %}" class="nav-link">
+    <i class="bi bi-clock-history"></i> Historique
+  </a>
+
+  <div class="nav-section">Rapports</div>
+  <a href="{% url 'index_rapports' %}" class="nav-link {% if 'rapport' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-file-earmark-bar-graph"></i> Rapports & exports
+  </a>
+
+  <div style="padding:1.5rem 1.2rem; margin-top:auto; border-top:1px solid rgba(255,255,255,.1);">
+    <a href="{% url 'logout' %}" class="nav-link" style="color:rgba(255,100,100,.8);">
+      <i class="bi bi-box-arrow-right"></i> Déconnexion
+    </a>
+  </div>
+</nav>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <button class="btn btn-sm d-md-none me-3" onclick="toggleSidebar()" aria-label="Ouvrir le menu">
+    <i class="bi bi-list fs-5"></i>
+  </button>
+  <span class="page-title">{% block page_title %}Tableau de bord{% endblock %}</span>
+  <div class="ms-auto d-flex align-items-center gap-3">
+    {% if pannes_actives > 0 %}
+    <span class="badge bg-danger"><i class="bi bi-exclamation-triangle me-1"></i>{{ pannes_actives }} panne(s)</span>
+    {% endif %}
+    <span class="text-muted small"><i class="bi bi-calendar3 me-1"></i>{{ aujourd_hui }}</span>
+    <span class="fw-semibold text-success small"><i class="bi bi-person-circle me-1"></i>Admin</span>
+  </div>
+</header>
+
+<!-- CONTENT -->
+<main class="main-content">
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% block content %}{% endblock %}
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+function toggleSidebar(forceOpen) {
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : !sidebar.classList.contains('open');
+  sidebar.classList.toggle('open', shouldOpen);
+  backdrop.classList.toggle('show', shouldOpen);
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register("{% url 'service_worker' %}").catch(() => {});
+  });
+}
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

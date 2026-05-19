@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Conducteurs{% endblock %}
+{% block page_title %}<i class="bi bi-person-badge me-2"></i>Conducteurs{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <span class="badge bg-success">{{ conducteurs|length }} conducteur(s)</span>
+  <a href="{% url 'ajouter_conducteur' %}" class="btn btn-primary"><i class="bi bi-plus-circle me-1"></i>Ajouter</a>
+</div>
+<div class="row g-3">
+{% for c in conducteurs %}
+<div class="col-md-4">
+<div class="stat-card">
+  <div class="d-flex align-items-center gap-3 mb-3">
+    <div style="width:48px;height:48px;border-radius:50%;background:#e8f5e9;display:flex;align-items:center;justify-content:center;font-weight:700;color:#1a472a;font-size:1.1rem;">
+      {{ c.prenom.0 }}{{ c.nom.0 }}
+    </div>
+    <div>
+      <div class="fw-bold">{{ c.nom_complet }}</div>
+      <div class="text-muted small">{{ c.telephone }}</div>
+    </div>
+  </div>
+  <div class="text-muted small mb-1"><i class="bi bi-motorcycle me-1"></i>{{ c.moto|default:"Pas de moto assignée" }}</div>
+  <div class="text-muted small mb-3"><i class="bi bi-calendar me-1"></i>Depuis le {{ c.date_debut }}</div>
+  <span class="badge {% if c.actif %}badge-active{% else %}badge-panne{% endif %}">{% if c.actif %}Actif{% else %}Inactif{% endif %}</span>
+  <div class="d-flex gap-2 mt-3">
+    <a href="{% url 'modifier_conducteur' c.pk %}" class="btn btn-sm btn-outline-primary flex-fill">Modifier</a>
+    <a href="{% url 'supprimer_conducteur' c.pk %}" class="btn btn-sm btn-outline-danger">Suppr.</a>
+  </div>
+</div>
+</div>
+{% empty %}
+<div class="col-12"><div class="stat-card text-center text-muted py-5">Aucun conducteur. <a href="{% url 'ajouter_conducteur' %}">Ajouter le premier</a></div></div>
+{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a472a">
+<title>MotoGest - Hors ligne</title>
+<link rel="manifest" href="{% url 'manifest' %}">
+<style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4f6f4;
+  color: #1a1a2e;
+  font-family: "Segoe UI", Arial, sans-serif;
+  padding: 1rem;
+}
+.offline {
+  width: 100%;
+  max-width: 380px;
+  background: #fff;
+  border: 1px solid #e8ece8;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+.icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1rem;
+}
+h1 {
+  color: #1a472a;
+  font-size: 1.35rem;
+  margin: 0 0 .5rem;
+}
+p {
+  color: #5f6b63;
+  line-height: 1.5;
+  margin: 0 0 1.25rem;
+}
+a {
+  display: inline-block;
+  background: #1a472a;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 600;
+  padding: .75rem 1rem;
+  text-decoration: none;
+}
+</style>
+</head>
+<body>
+<main class="offline">
+  <img src="{% static 'img/pwa-icon.svg' %}" alt="" class="icon">
+  <h1>Connexion indisponible</h1>
+  <p>MotoGest est installé, mais cette page a besoin du serveur pour afficher les données à jour.</p>
+  <a href="{% url 'login' %}">Réessayer</a>
+</main>
+</body>
+</html>

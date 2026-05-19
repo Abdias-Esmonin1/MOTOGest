@@ -1,0 +1,88 @@
+/* ============================================
+   MotoGest — Styles globaux
+   ============================================ */
+
+/* FORMS */
+.form-control, .form-select {
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  font-size: .88rem;
+  transition: border-color .2s, box-shadow .2s;
+}
+.form-control:focus, .form-select:focus {
+  border-color: #1a472a;
+  box-shadow: 0 0 0 .2rem rgba(26,71,42,.12);
+}
+.form-label { font-size: .85rem; color: #495057; margin-bottom: .35rem; }
+
+/* BUTTONS */
+.btn { border-radius: 8px; font-size: .85rem; font-weight: 500; }
+.btn-sm { border-radius: 6px; }
+.btn-primary { background: #1a472a; border-color: #1a472a; }
+.btn-primary:hover, .btn-primary:focus { background: #2d6a4f; border-color: #2d6a4f; }
+.btn-outline-primary { color: #1a472a; border-color: #1a472a; }
+.btn-outline-primary:hover { background: #1a472a; border-color: #1a472a; color: #fff; }
+
+/* BADGES */
+.badge { font-weight: 500; border-radius: 6px; padding: .35em .65em; font-size: .75em; }
+.badge-active    { background: #d4edda; color: #155724; }
+.badge-panne     { background: #f8d7da; color: #721c24; }
+.badge-maintenance { background: #fff3cd; color: #856404; }
+.badge-repos     { background: #d1ecf1; color: #0c5460; }
+
+/* TABLE */
+.table { font-size: .875rem; }
+.table thead th {
+  font-weight: 600; font-size: .78rem; text-transform: uppercase;
+  letter-spacing: .04em; color: #6c757d; padding: .85rem .75rem;
+}
+.table tbody tr:hover { background: #f8faf8; }
+.table td { padding: .75rem; vertical-align: middle; }
+
+/* CARDS hover */
+.stat-card { transition: transform .15s, box-shadow .15s; }
+.stat-card:hover { transform: translateY(-1px); }
+
+/* STAT ICON centered */
+.stat-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+}
+
+/* ALERTS */
+.alert { border-radius: 10px; font-size: .875rem; }
+.alert-success { background: #d4edda; border-color: #c3e6cb; color: #155724; }
+.alert-danger  { background: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+.alert-warning { background: #fff3cd; border-color: #ffeeba; color: #856404; }
+.alert-info    { background: #d1ecf1; border-color: #bee5eb; color: #0c5460; }
+
+/* PROGRESS */
+.progress { border-radius: 10px; background: #e9ecef; }
+.progress-bar { border-radius: 10px; }
+
+/* PAGINATION */
+.pagination .page-link { border-radius: 6px !important; margin: 0 2px; color: #1a472a; }
+.pagination .page-item.active .page-link { background: #1a472a; border-color: #1a472a; }
+
+/* SCROLLBAR sidebar */
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 4px; }
+
+/* MOBILE OVERLAY */
+@media (max-width: 768px) {
+  .sidebar { box-shadow: 4px 0 20px rgba(0,0,0,.3); }
+  .main-content { padding: 1rem; }
+  .stat-value { font-size: 1.3rem; }
+}
+
+/* STATUS COLOR HELPERS */
+.text-fcfa { color: #1a472a; font-weight: 600; }
+.bg-motogest { background: #1a472a; }
+
+/* EMPTY STATE */
+.empty-state {
+  text-align: center; padding: 3rem 1rem;
+  color: #adb5bd;
+}
+.empty-state i { font-size: 3rem; margin-bottom: 1rem; display: block; }
