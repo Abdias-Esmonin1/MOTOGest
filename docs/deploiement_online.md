@@ -34,6 +34,9 @@ CSRF_TRUSTED_ORIGINS=https://ton-domaine.com
 SESSION_COOKIE_SECURE=True
 CSRF_COOKIE_SECURE=True
 SECURE_SSL_REDIRECT=False
+ADMIN_USERNAME=Zadmin
+ADMIN_PASSWORD=MMDR
+ADMIN_EMAIL=admin@motogest.ci
 ```
 
 Si l'adresse donnée par l'hébergeur est `https://motogest.onrender.com`, utilise:
