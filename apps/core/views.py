@@ -15,6 +15,7 @@ def dashboard(request):
     from apps.paiements.models import Paiement
     from apps.pannes.models import Panne
     from apps.finances.models import Depense
+    from apps.finances.calculs import get_stats_financieres
 
     aujourd_hui = timezone.now().date()
     debut_mois = aujourd_hui.replace(day=1)
@@ -28,8 +29,12 @@ def dashboard(request):
     recettes_semaine = Paiement.objects.filter(date__gte=debut_semaine).aggregate(t=Sum('montant_verse'))['t'] or 0
     recettes_mois = Paiement.objects.filter(date__gte=debut_mois).aggregate(t=Sum('montant_verse'))['t'] or 0
 
-    depenses_mois = Depense.objects.filter(date__gte=debut_mois).aggregate(t=Sum('montant'))['t'] or 0
-    benefice_mois = recettes_mois - depenses_mois
+    stats_finances_mois = get_stats_financieres('mois')
+    depenses_mois = stats_finances_mois['depenses']
+    emprunts_mois = stats_finances_mois['emprunts_caisse']
+    remboursements_mois = stats_finances_mois['remboursements_emprunts']
+    benefice_mois = stats_finances_mois['benefice']
+    solde_caisse_mois = stats_finances_mois['solde_caisse']
 
     paiements_recents = Paiement.objects.select_related('moto').order_by('-date', '-created_at')[:10]
     pannes_recentes = Panne.objects.select_related('moto').order_by('-date_panne')[:5]
@@ -46,7 +51,7 @@ def dashboard(request):
         else:
             fin = debut.replace(month=debut.month + 1, day=1)
         r = Paiement.objects.filter(date__gte=debut, date__lt=fin).aggregate(t=Sum('montant_verse'))['t'] or 0
-        dep = Depense.objects.filter(date__gte=debut, date__lt=fin).aggregate(t=Sum('montant'))['t'] or 0
+        dep = Depense.objects.filter(date__gte=debut, date__lt=fin, type_operation='depense').aggregate(t=Sum('montant'))['t'] or 0
         labels_mois.append(debut.strftime('%b %Y'))
         data_recettes.append(float(r))
         data_depenses.append(float(dep))
@@ -59,7 +64,10 @@ def dashboard(request):
         'recettes_semaine': recettes_semaine,
         'recettes_mois': recettes_mois,
         'depenses_mois': depenses_mois,
+        'emprunts_mois': emprunts_mois,
+        'remboursements_mois': remboursements_mois,
         'benefice_mois': benefice_mois,
+        'solde_caisse_mois': solde_caisse_mois,
         'paiements_recents': paiements_recents,
         'pannes_recentes': pannes_recentes,
         'labels_mois': labels_mois,

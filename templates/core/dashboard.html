@@ -56,6 +56,27 @@
   </div>
 </div>
 
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card text-center">
+      <div class="fw-bold text-danger fs-5">{{ emprunts_mois|fcfa }}</div>
+      <div class="text-muted small">Emprunts caisse ce mois</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card text-center">
+      <div class="fw-bold text-success fs-5">{{ remboursements_mois|fcfa }}</div>
+      <div class="text-muted small">Remboursements ce mois</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card text-center">
+      <div class="fw-bold {% if solde_caisse_mois >= 0 %}text-primary{% else %}text-danger{% endif %} fs-5">{{ solde_caisse_mois|fcfa }}</div>
+      <div class="text-muted small">Solde caisse ce mois</div>
+    </div>
+  </div>
+</div>
+
 <!-- ETAT FLOTTE -->
 <div class="row g-3 mb-4">
   <div class="col-md-4">
@@ -163,7 +184,7 @@
       <span class="fw-semibold text-muted me-2">Actions rapides :</span>
       <a href="{% url 'saisie_journaliere' %}" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle me-1"></i>Saisir paiements</a>
       <a href="{% url 'ajouter_panne' %}" class="btn btn-danger btn-sm"><i class="bi bi-tools me-1"></i>Déclarer panne</a>
-      <a href="{% url 'ajouter_depense' %}" class="btn btn-warning btn-sm"><i class="bi bi-dash-circle me-1"></i>Enregistrer dépense</a>
+      <a href="{% url 'ajouter_depense' %}" class="btn btn-warning btn-sm"><i class="bi bi-dash-circle me-1"></i>Dépense / emprunt</a>
       <a href="{% url 'index_rapports' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-file-earmark me-1"></i>Générer rapport</a>
     </div>
   </div>

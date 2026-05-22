@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Sum
 from .models import Depense, Epargne
 from .forms import DepenseForm, EpargneForm
 from .calculs import get_stats_financieres
@@ -19,10 +18,14 @@ def tableau_bord_finances(request):
     if periode not in PERIODE_CHOICES:
         periode = 'mois'
     stats = get_stats_financieres(periode)
-    depenses_recentes = Depense.objects.order_by('-date')[:20]
+    depenses_recentes = Depense.objects.order_by('-date', '-created_at')[:20]
+    emprunts_en_cours = Depense.objects.filter(
+        type_operation='emprunt_caisse',
+    ).exclude(statut_remboursement='rembourse').order_by('-date', '-created_at')[:10]
     return render(request, 'finances/tableau_bord.html', {
         'stats': stats,
         'depenses_recentes': depenses_recentes,
+        'emprunts_en_cours': emprunts_en_cours,
         'periode': periode,
         'periode_choices': PERIODE_CHOICES,
     })

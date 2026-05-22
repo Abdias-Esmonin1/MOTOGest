@@ -3,8 +3,9 @@ from .models import Depense, Epargne
 
 @admin.register(Depense)
 class DepenseAdmin(admin.ModelAdmin):
-    list_display = ['date', 'categorie', 'description', 'montant']
-    list_filter = ['categorie']
+    list_display = ['date', 'type_operation', 'categorie', 'description', 'personne', 'montant', 'statut_remboursement']
+    list_filter = ['type_operation', 'categorie', 'statut_remboursement']
+    search_fields = ['description', 'personne', 'notes']
     date_hierarchy = 'date'
 
 @admin.register(Epargne)

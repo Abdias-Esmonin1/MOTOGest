@@ -13,25 +13,54 @@
 
 <!-- KPIs -->
 <div class="row g-3 mb-4">
-  <div class="col-md-4">
+  <div class="col-md-3">
     <div class="stat-card text-center">
       <div class="stat-icon mx-auto mb-2" style="background:#e8f5e9;color:#1a472a;"><i class="bi bi-arrow-up-circle fs-4"></i></div>
       <div class="stat-value text-success">{{ stats.recettes|fcfa }}</div>
       <div class="stat-label">Recettes</div>
     </div>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-3">
     <div class="stat-card text-center">
       <div class="stat-icon mx-auto mb-2" style="background:#fce4ec;color:#c62828;"><i class="bi bi-arrow-down-circle fs-4"></i></div>
       <div class="stat-value text-danger">{{ stats.depenses|fcfa }}</div>
-      <div class="stat-label">Dépenses</div>
+      <div class="stat-label">Dépenses réelles</div>
     </div>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-3">
     <div class="stat-card text-center">
       <div class="stat-icon mx-auto mb-2" style="background:#e8eaf6;color:#283593;"><i class="bi bi-graph-up-arrow fs-4"></i></div>
       <div class="stat-value {% if stats.benefice >= 0 %}text-success{% else %}text-danger{% endif %}">{{ stats.benefice|fcfa }}</div>
       <div class="stat-label">Bénéfice net</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-card text-center">
+      <div class="stat-icon mx-auto mb-2" style="background:#fff3cd;color:#9a6700;"><i class="bi bi-wallet2 fs-4"></i></div>
+      <div class="stat-value {% if stats.solde_caisse >= 0 %}text-success{% else %}text-danger{% endif %}">{{ stats.solde_caisse|fcfa }}</div>
+      <div class="stat-label">Solde caisse</div>
+    </div>
+  </div>
+</div>
+
+<!-- Mouvements caisse -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card text-center">
+      <div class="fw-bold text-danger fs-5">{{ stats.emprunts_caisse|fcfa }}</div>
+      <div class="text-muted small">Emprunts pris dans la caisse</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card text-center">
+      <div class="fw-bold text-success fs-5">{{ stats.remboursements_emprunts|fcfa }}</div>
+      <div class="text-muted small">Remboursements reçus</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card text-center">
+      <div class="fw-bold text-primary fs-5">{{ stats.sorties_caisse|fcfa }}</div>
+      <div class="text-muted small">Total sorties de caisse</div>
     </div>
   </div>
 </div>
@@ -42,34 +71,34 @@
   <div class="row g-3">
     <div class="col-6 col-md-3 text-center">
       <div class="fw-bold text-success fs-5">{{ stats.repartition.epargne|fcfa }}</div>
-      <div class="text-muted small">35% — Épargne business</div>
+      <div class="text-muted small">35% - Épargne business</div>
       <div class="progress mt-2" style="height:6px;"><div class="progress-bar bg-success" style="width:35%"></div></div>
     </div>
     <div class="col-6 col-md-3 text-center">
       <div class="fw-bold text-primary fs-5">{{ stats.repartition.maintenance|fcfa }}</div>
-      <div class="text-muted small">25% — Maintenance</div>
+      <div class="text-muted small">25% - Maintenance</div>
       <div class="progress mt-2" style="height:6px;"><div class="progress-bar bg-primary" style="width:25%"></div></div>
     </div>
     <div class="col-6 col-md-3 text-center">
       <div class="fw-bold text-warning fs-5">{{ stats.repartition.reinvestissement|fcfa }}</div>
-      <div class="text-muted small">20% — Réinvestissement</div>
+      <div class="text-muted small">20% - Réinvestissement</div>
       <div class="progress mt-2" style="height:6px;"><div class="progress-bar bg-warning" style="width:20%"></div></div>
     </div>
     <div class="col-6 col-md-3 text-center">
       <div class="fw-bold text-danger fs-5">{{ stats.repartition.personnel|fcfa }}</div>
-      <div class="text-muted small">20% — Personnel</div>
+      <div class="text-muted small">20% - Personnel</div>
       <div class="progress mt-2" style="height:6px;"><div class="progress-bar bg-danger" style="width:20%"></div></div>
     </div>
   </div>
 </div>
 
-<!-- Actions + Dépenses récentes -->
+<!-- Actions + mouvements récents -->
 <div class="row g-3">
   <div class="col-md-4">
     <div class="stat-card">
       <h6 class="fw-semibold mb-3">Actions rapides</h6>
       <div class="d-grid gap-2">
-        <a href="{% url 'ajouter_depense' %}" class="btn btn-outline-danger"><i class="bi bi-dash-circle me-1"></i>Enregistrer dépense</a>
+        <a href="{% url 'ajouter_depense' %}" class="btn btn-outline-danger"><i class="bi bi-dash-circle me-1"></i>Enregistrer dépense / emprunt</a>
         <a href="{% url 'ajouter_epargne' %}" class="btn btn-outline-success"><i class="bi bi-piggy-bank me-1"></i>Enregistrer épargne</a>
         <a href="{% url 'rapport_excel' %}" class="btn btn-outline-secondary"><i class="bi bi-file-excel me-1"></i>Exporter Excel</a>
         <a href="{% url 'rapport_pdf' %}" class="btn btn-outline-secondary"><i class="bi bi-file-pdf me-1"></i>Exporter PDF</a>
@@ -78,23 +107,45 @@
   </div>
   <div class="col-md-8">
     <div class="table-card">
-      <div class="p-3 border-bottom fw-semibold">Dépenses récentes</div>
+      <div class="p-3 border-bottom fw-semibold">Mouvements récents</div>
       <table class="table table-hover mb-0">
-        <thead><tr><th>Date</th><th>Catégorie</th><th>Description</th><th>Montant</th></tr></thead>
+        <thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Personne</th><th>Montant</th></tr></thead>
         <tbody>
         {% for d in depenses_recentes %}
         <tr>
           <td class="text-muted small">{{ d.date }}</td>
-          <td><span class="badge bg-light text-dark">{{ d.get_categorie_display }}</span></td>
+          <td><span class="badge bg-light text-dark">{{ d.get_type_operation_display }}</span></td>
           <td>{{ d.description }}</td>
-          <td class="text-danger fw-semibold">{{ d.montant|fcfa }}</td>
+          <td class="text-muted small">{{ d.personne|default:"-" }}</td>
+          <td class="{% if d.type_operation == 'remboursement_emprunt' %}text-success{% else %}text-danger{% endif %} fw-semibold">{{ d.montant|fcfa }}</td>
         </tr>
         {% empty %}
-        <tr><td colspan="4" class="text-center text-muted py-3">Aucune dépense</td></tr>
+        <tr><td colspan="5" class="text-center text-muted py-3">Aucun mouvement</td></tr>
         {% endfor %}
         </tbody>
       </table>
     </div>
   </div>
 </div>
+
+{% if emprunts_en_cours %}
+<div class="table-card mt-4">
+  <div class="p-3 border-bottom fw-semibold">Emprunts en cours</div>
+  <table class="table table-hover mb-0">
+    <thead><tr><th>Date</th><th>Personne</th><th>Description</th><th>Prévu le</th><th>Statut</th><th>Montant</th></tr></thead>
+    <tbody>
+    {% for e in emprunts_en_cours %}
+    <tr>
+      <td class="text-muted small">{{ e.date }}</td>
+      <td class="fw-semibold">{{ e.personne }}</td>
+      <td>{{ e.description }}</td>
+      <td class="text-muted small">{{ e.date_remboursement_prevue|default:"-" }}</td>
+      <td><span class="badge bg-warning text-dark">{{ e.get_statut_remboursement_display }}</span></td>
+      <td class="text-danger fw-semibold">{{ e.montant|fcfa }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
 {% endblock %}
